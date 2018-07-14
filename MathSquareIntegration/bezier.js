@@ -17,10 +17,10 @@ pb.setup = function() {
 	subframe = 0;
 	resolution = 1000;
 	mode = 0;
-	p1 = {x:100 * random(), y:100 * random(), assigned:0};
-	p2 = {x:200 * random(), y:200 * random(), assigned:0};
-	p3 = {x:300 * random(), y:300 * random(), assigned:0};
-	p4 = {x:400 * random(), y:400 * random(), assigned:0};
+	p1 = {x:100 * random(), y:100 * random(), assigned:-1};
+	p2 = {x:200 * random(), y:200 * random(), assigned:-1};
+	p3 = {x:300 * random(), y:300 * random(), assigned:-1};
+	p4 = {x:400 * random(), y:400 * random(), assigned:-1};
 	controlPoints = [p1, p2, p3, p4];
 	blueCurve = [];
 	line1 = {
@@ -67,9 +67,38 @@ function distance(point1, point2)
 	return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y,2));
 }
 
-pb.draw = function() {
+pb.draw = function(floor) {
 	clear();
-	
+	var currentUsers = floor.users;
+	if(currentUsers.length > 0)
+	{
+	   mode = 1;
+	   for(i = 0; i < users.length; i = i + 1)
+	   {
+		
+		var userPoint = {x:mouseX, y: mouseY, assigned:i};
+		var closestDist = 1152;
+		var candidate = 0;
+		for(j = 0; j < controlPoints.length; j = j + 1)
+		{
+			if(controlPoints[j].assigned == i)
+			{
+			   candidate = j;
+			}
+			if(distance(userPoint, controlPoints[j]) < closestDist && controlPoints[j].assigned == -1)
+			{
+				candidate = j;
+				closestDist = distance(userPoint, controlPoints[j]);
+			}
+		}
+		controlPoints[candidate] = userPoint;
+		
+	   }
+	}
+	else
+	{
+	   mode = 0;
+	}
 	stroke(0, 0, 0);
 	fill(0, 0, 0);
 	ellipse(controlPoints[0].x, controlPoints[0].y, 4, 4);
@@ -111,12 +140,16 @@ pb.draw = function() {
 	if(subframe >= (resolution / 5))
 	{
 		subframe = 0;
+		if(currentUsers.length == 0)
+		{
+			mode = 0;
+		}
 		if(mode == 0)
 		{
-			p1 = {x:100 * random(), y:100 * random(), assigned:0};
-			p2 = {x:200 * random(), y:200 * random(), assigned:0};
-			p3 = {x:300 * random(), y:300 * random(), assigned:0};
-			p4 = {x:400 * random(), y:400 * random(), assigned:0};
+			p1 = {x:100 * random(), y:100 * random(), assigned:-1};
+			p2 = {x:200 * random(), y:200 * random(), assigned:-1};
+			p3 = {x:300 * random(), y:300 * random(), assigned:-1};
+			p4 = {x:400 * random(), y:400 * random(), assigned:-1};
 			controlPoints = [p1, p2, p3, p4];
 		}
 		

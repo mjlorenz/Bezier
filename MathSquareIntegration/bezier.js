@@ -73,10 +73,10 @@ pb.draw = function(floor) {
 	if(currentUsers.length > 0)
 	{
 	   mode = 1;
-	   for(i = 0; i < users.length; i = i + 1)
+	   for(i = 0; i < currentUsers.length; i = i + 1)
 	   {
 		
-		var userPoint = {x:mouseX, y: mouseY, assigned:i};
+		var userPoint = {x:currentUsers[i].x, y:currentUsers[i].y, assigned:i};
 		var closestDist = 1152;
 		var candidate = 0;
 		for(j = 0; j < controlPoints.length; j = j + 1)
@@ -84,6 +84,7 @@ pb.draw = function(floor) {
 			if(controlPoints[j].assigned == i)
 			{
 			   candidate = j;
+			   closestDist = -1;
 			}
 			if(distance(userPoint, controlPoints[j]) < closestDist && controlPoints[j].assigned == -1)
 			{
@@ -171,7 +172,7 @@ pb.draw = function(floor) {
 	
 }
 export const behavior = {
-  title: "Sensor Debug (P5)",
+  title: "Bezier (P5)",
   init: pb.init.bind(pb),
   frameRate: 'sensors',
   render: pb.render.bind(pb),

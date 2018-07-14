@@ -40,7 +40,7 @@ pb.setup = function() {
 
 function weightMidpoint(point1, point2, percent)
 {
-	result = {x:(point1.x * (1 - percent) + point2.x * (percent)), y:(point1.y * (1 - percent) + point2.y * (percent))};
+	var result = {x:(point1.x * (1 - percent) + point2.x * (percent)), y:(point1.y * (1 - percent) + point2.y * (percent))};
 	return result;
 }
 
@@ -49,8 +49,8 @@ function mousePressed()
 	mode = 1;
 	subframe = resolution + 1;
 	mousePoint = {x:mouseX, y: mouseY};
-	closestDist = 1152;
-	closePoint = 0;
+	var closestDist = 1152;
+	var closePoint = 0;
 	for(i = 0; i < controlPoints.length; i = i + 1)
 	{
 		if(distance(mousePoint, controlPoints[i]) < closestDist)
@@ -143,6 +143,6 @@ export const behavior = {
   frameRate: 'sensors',
   render: pb.render.bind(pb),
   numGhosts: 0,
-  maxUsers: 5
+  maxUsers: 4
 };
 export default behavior

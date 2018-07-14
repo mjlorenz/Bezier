@@ -36,7 +36,6 @@ function setup() {
 		end:controlPoints[3]
 	};
 	noFill();
-  // put setup code here
 }
 
 function weightMidpoint(point1, point2, percent)
@@ -136,5 +135,13 @@ function draw() {
 		
 	}
 	
-  // put drawing code here
 }
+export const behavior = {
+  title: "Sensor Debug (P5)",
+  init: pb.init.bind(pb),
+  frameRate: 'sensors',
+  render: pb.render.bind(pb),
+  numGhosts: 0,
+  maxUsers: 5
+};
+export default behavior

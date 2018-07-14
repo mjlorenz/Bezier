@@ -4,14 +4,14 @@
  *  Description: Animates drawing of Bexier curve using user positions as control points
  * Scheduler ID: 
  *    Framework: P5
- *       Author: Micah Lorenz, Henry Zhou
+ *       Author: Micah Lorenz, Henry Zhou, May Lee
  *      Created: 2018-07-14
  *       Status: works
  */
  
 
  
-function setup() {
+pb.setup = function() {
 	createCanvas(576,576);
 	//frameRate(10000);
 	subframe = 0;
@@ -67,8 +67,9 @@ function distance(point1, point2)
 	return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y,2));
 }
 
-function draw() {
+pb.draw = function() {
 	clear();
+	
 	stroke(0, 0, 0);
 	fill(0, 0, 0);
 	ellipse(controlPoints[0].x, controlPoints[0].y, 4, 4);

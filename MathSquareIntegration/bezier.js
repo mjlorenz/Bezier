@@ -8,10 +8,10 @@
  *      Created: 2018-07-14
  *       Status: works
  */
- 
-//import P5Behavior from 'p5beh'; Not sure if import line is needed
 
-//const pb = new P5Behavior();  Not sure if this is needed either
+import P5Behavior from 'p5beh';
+import * as Floor from 'floor';
+/const pb = new P5Behavior();  Not sure if this is needed either
 
 //pb.setup = function(p)? 
 

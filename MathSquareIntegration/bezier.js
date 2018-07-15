@@ -9,8 +9,12 @@
  *       Status: works
  */
  
+//import P5Behavior from 'p5beh'; Not sure if import line is needed
 
- 
+//const pb = new P5Behavior();  Not sure if this is needed either
+
+//pb.setup = function(p)? 
+
 pb.setup = function() {
 	createCanvas(576,576);
 	//frameRate(10000);
@@ -66,6 +70,8 @@ function distance(point1, point2)
 {
 	return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y,2));
 }
+
+//pb.draw = function(floor, p)?
 
 pb.draw = function(floor) {
 	clear();

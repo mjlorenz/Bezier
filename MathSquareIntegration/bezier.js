@@ -121,6 +121,10 @@ pb.draw = function(floor) {
 				closestDist = distance(userPoint, controlPoints[j]);
 			}
 		}
+		if(distance(userPoint, controlPoints[candidate]) > 8)
+		{
+		   subframe = resolution + 1;
+		}
 		controlPoints[candidate] = userPoint;
 		
 	   }
@@ -163,7 +167,7 @@ pb.draw = function(floor) {
 	}
 	for(var i = 0; i < blueCurve.length; i = i + 1)
 	{
-		this.ellipse(blueCurve[i].x,blueCurve[i].y, 1, 1);
+		this.ellipse(blueCurve[i].x, blueCurve[i].y, 1, 1);
 	}
 	subframe = subframe + 1;
 	

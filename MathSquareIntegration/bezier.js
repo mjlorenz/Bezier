@@ -4,7 +4,7 @@
  *  Description: Animates drawing of Bexier curve using user positions as control points
  * Scheduler ID: 
  *    Framework: P5
- *       Author: Micah Lorenz, Henry Zhou, May Lee
+ *       Author: Micah Lorenz, May Lee
  *      Created: 2018-07-14
  *       Status: works
  */

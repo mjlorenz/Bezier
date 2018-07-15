@@ -126,7 +126,7 @@ pb.draw = function(floor) {
 		   subframe = resolution + 1;
 		}
 		controlPoints[candidate] = userPoint;
-		
+		mode = 1;
 	   }
 	}
 	else

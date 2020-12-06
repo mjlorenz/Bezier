@@ -1,4 +1,4 @@
-# MoMath Hackathon 2018: Bézier Curve 2018
+# MoMath Hackathon 2018: Bézier Curve
 
 Bezier Curve Animation created for MoMath Hackathon 2018
 - _Math Square behavior_

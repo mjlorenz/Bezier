@@ -13,7 +13,7 @@
 var curves = [];
 var controlPoints = [];
 var sideLength = 1152;
-var colors = ['black','blue','green','red',];
+var colors = ['black','blue','green','red'];
 var colorIndex = 0;
 function setup() {
 	createCanvas(sideLength,sideLength);
@@ -123,7 +123,7 @@ function distance(point1, point2)
 
 function drawPath(pointSet)
 {
-	stroke(colors[colorIndex % colors.length]);
+	//stroke(colors[colorIndex % colors.length]);
 	if(pointSet.length > 1)
 	{
 		for(i = 0; i < pointSet.length - 1; i++)
@@ -135,8 +135,10 @@ function drawPath(pointSet)
 
 function nextColor()
 {
-	stroke(colors[colorIndex % colors.length]);
-	colorIndex = (colorIndex + 1) % colors.length;
+	//stroke(colors[colorIndex % colors.length]);
+	stroke(floor(255 * Math.sin(colorIndex)), floor(255 * Math.sin(2 * colorIndex)), floor(255 * Math.sin(3 * colorIndex)));
+	//colorIndex = (colorIndex + 1) % colors.length;
+	colorIndex = (colorIndex + 1);
 }
 
 function draw() {
@@ -158,6 +160,7 @@ function draw() {
 	}
 	nextColor();
 	stroke(128);
+	strokeWeight(2);
 	noFill()
 	for(i = 0; i < framePoints.length; i++)
 	{

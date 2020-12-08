@@ -17,6 +17,7 @@ var colors = ['black','blue','green','red'];
 var colorIndex = 0;
 function setup() {
 	createCanvas(sideLength,sideLength);
+	
 	//frameRate(10000);
 	subframe = 0;
 	resolution = 2000;
@@ -143,9 +144,10 @@ function nextColor()
 
 function draw() {
 	clear();
+	background('black');
 	stroke(0, 0, 0);
-	fill(0, 0, 0);
-	colorIndex = 0;
+	//fill('black');
+	colorIndex = 0.5;
 	nextColor();
 	//stroke(colors[colorIndex % colors.length]);
 	//colorIndex = (colorIndex + 1) % colors.length;

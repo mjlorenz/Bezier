@@ -12,9 +12,12 @@
  
 var curves = [];
 var controlPoints = [];
+var count = 0;
 var sideLength = 1152;
 var colors = ['black','blue','green','red'];
 var colorIndex = 0;
+var mode;
+var colorOffset = [];
 function setup() {
 	createCanvas(sideLength,sideLength);
 	
@@ -22,7 +25,14 @@ function setup() {
 	subframe = 0;
 	resolution = 2000;
 	mode = 0;
-	controlPoints = generateControlPoints();
+	count = floor(Math.random() * 3) + 2;
+	for(i = 0; i <= count; i++)
+	{
+		controlPoints.push(generateControlPoints());
+		curves.push([]);
+		colorOffset.push(Math.random() * 5 + 0.5);
+	}
+	//controlPoints = curves[0];
 	/*
 	p1 = {x:100 * random(), y:100 * random(), assigned:0};
 	p2 = {x:200 * random(), y:200 * random(), assigned:0};
@@ -30,8 +40,8 @@ function setup() {
 	p4 = {x:400 * random(), y:400 * random(), assigned:0};
 
 	controlPoints = [p1, p2, p3, p4];
-	*/
-	blueCurve = [];
+	
+	//blueCurve = [];
 	line1 = {
 		start:controlPoints[0],
 		end:controlPoints[1]
@@ -44,18 +54,20 @@ function setup() {
 		start:controlPoints[2],
 		end:controlPoints[3]
 	};
+	/*
+	*/
 	noFill();
   // put setup code here
 }
 
 function generateControlPoints()
 {
-	var length = Math.floor(Math.random() * 10) + 4;
-	output = []; 
+	var length = Math.floor(Math.random() * 4) + 3;
+	var output = []; 
 	var divisions = sideLength / (length + 1);
 	for(i = 0; i < length; i++)
 	{
-		output.push({x:divisions * (i + 1) * random(), y:divisions * (i + 1) * random(), assigned:0});
+		output.push({x:divisions * (i + 1) + divisions * random(), y:divisions * (i + 1) * random(), assigned:0});
 	}
 	return output;
 }
@@ -88,12 +100,13 @@ function cascade(pointSet, percent)
 
 function mousePressed()
 {
+	/*
 	mode = 1;
 	subframe = resolution + 1;
 	mousePoint = {x:mouseX, y: mouseY};
 	var closestDist = sideLength * 2;
 	var closePoint = 0;
-	/*
+	
 	switch(mouseButton) {
 		case LEFT: //Add Point
 			
@@ -105,7 +118,7 @@ function mousePressed()
 			break;
 
 	}
-	*/
+	
 	for(i = 0; i < controlPoints.length; i = i + 1)
 	{
 		if(distance(mousePoint, controlPoints[i]) < closestDist)
@@ -115,6 +128,7 @@ function mousePressed()
 		}
 	}
 	controlPoints[closePoint] = mousePoint;
+	*/
 }
 
 function distance(point1, point2)
@@ -147,31 +161,39 @@ function draw() {
 	background('black');
 	stroke(0, 0, 0);
 	//fill('black');
-	colorIndex = 0.5;
-	nextColor();
+	
 	//stroke(colors[colorIndex % colors.length]);
 	//colorIndex = (colorIndex + 1) % colors.length;
-	var framePoints = cascade(controlPoints, subframe * 5 / resolution);	
+	var framePoints = [];
 	for(i = 0; i < controlPoints.length; i++)
 	{
-		ellipse(controlPoints[i].x, controlPoints[i].y, 4, 4);
-		if(i < controlPoints.length - 1)
+		colorIndex = colorOffset[i];
+		nextColor();
+		framePoints.push(cascade(controlPoints[i], subframe * 5 / resolution));
+		for(j = 0; j < controlPoints[i].length; j++)
 		{
-			line(controlPoints[i].x,controlPoints[i].y,controlPoints[i+1].x,controlPoints[i+1].y)
+			ellipse(controlPoints[i][j].x, controlPoints[i][j].y, 4, 4);
+			if(j < controlPoints[i].length - 1)
+			{
+				line(controlPoints[i][j].x,controlPoints[i][j].y,controlPoints[i][j+1].x,controlPoints[i][j+1].y)
+			}
+		}
+		nextColor();
+		stroke(128);
+		strokeWeight(2);
+		noFill()
+		for(j = 0; j < framePoints[i].length; j++)
+		{
+			var pointSet = framePoints[i][j];
+			drawPath(pointSet);
+			nextColor();
+			//stroke(colors[colorIndex % colors.length]);
+			//colorIndex = (colorIndex + 1) % colors.length;
 		}
 	}
-	nextColor();
-	stroke(128);
-	strokeWeight(2);
-	noFill()
-	for(i = 0; i < framePoints.length; i++)
-	{
-		//var pointSet = framePoints[i];
-		drawPath(framePoints[i]);
-		nextColor();
-		//stroke(colors[colorIndex % colors.length]);
-		//colorIndex = (colorIndex + 1) % colors.length;
-	}
+	//var framePoints = cascade(controlPoints, subframe * 5 / resolution);	
+	
+	
 	
 	/*
 	ellipse(controlPoints[0].x, controlPoints[0].y, 4, 4);
@@ -224,10 +246,14 @@ function draw() {
 		//ellipse(blueCurve[i].x,blueCurve[i].y, 1, 1);
 	}
 	*/
-	point = framePoints[0][0];
-	blueCurve.push(point);
-	stroke('white');
-	drawPath(blueCurve);
+	for(var i = 0; i < curves.length; i++)
+	{
+		point = framePoints[i][0][0];
+		curves[i].push(point);
+		stroke('white');
+		drawPath(curves[i]);
+	}
+	
 
 	subframe = subframe + 1;
 	
@@ -236,7 +262,17 @@ function draw() {
 		subframe = 0;
 		if(mode == 0)
 		{
-			controlPoints = generateControlPoints();
+			var count = floor(Math.random() * 3) + 1;
+			curves = [];
+			controlPoints = [];
+			colorOffset = [];
+			for(i = 0; i < count; i++)
+			{
+				controlPoints.push(generateControlPoints());
+				curves.push([]);
+				colorOffset.push(Math.random() * 5 + 0.5);
+			}
+			//controlPoints = curves[0];
 			/*
 			var length = Math.floor(Math.random() * 10) + 4;
 			controlPoints = []; 
@@ -256,8 +292,8 @@ function draw() {
 			controlPoints = [p1, p2, p3, p4];
 			*/
 		}
+
 		/*
-		*/
 		line1 = {
 			start:controlPoints[0],
 			end:controlPoints[1]

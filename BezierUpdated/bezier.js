@@ -226,6 +226,7 @@ function draw() {
 	*/
 	point = framePoints[0][0];
 	blueCurve.push(point);
+	stroke('white');
 	drawPath(blueCurve);
 
 	subframe = subframe + 1;

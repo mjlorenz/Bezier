@@ -67,7 +67,7 @@ function generateControlPoints()
 	var divisions = sideLength / (length + 1);
 	for(i = 0; i < length; i++)
 	{
-		output.push({x:divisions * (i + 1) + divisions * random(), y:divisions * (i + 1) * random(), assigned:0});
+		output.push({x:divisions * (i + 1) + divisions * random(), y:sideLength * random(), assigned:0});
 	}
 	return output;
 }

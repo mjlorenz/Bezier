@@ -13,25 +13,103 @@
 var curves = [];
 var controlPoints = [];
 var count = 0;
-var sideLength = 1152;
-var colors = ['black','blue','green','red'];
+
+var colors = ["black","red","green","blue","purple"];
 var colorIndex = 0;
 var mode;
 var colorOffset = [];
-function setup() {
-	createCanvas(sideLength,sideLength);
-	
+var subframe = 0;
+var resolution = 0;
+var mode = 0;
+var framerate = 30;
+var sideLength = 1000;//parseInt(canvas.getAttribute('height'));
+//var canvas;
+canvas = document.getElementById("bezierCanvas");
+ctx = canvas.getContext("2d");
+this.start();
+class BezierCurve {
+	constructor()
+	{
+		this.controlPoints = [];
+		this.path = [];
+	}
+	generateControlPoints()
+	{
+		let length = Math.floor(Math.random() * 4) + 3;
+		this.controlPoints = []; 
+		let divisions = sideLength / (length + 1);
+
+		for(i = 0; i < length; i++)
+		{
+			this.controlPoints.push([divisions * (i + 1) + divisions * random(), sideLength * random()]);
+		}
+		return length;
+	}
+	addPoint(x, y)
+	{
+		this.controlPoints.push([x, y]);
+	}
+	removeNearest(x, y)
+	{
+		if(this.controlPoints.length === 0)
+		{
+			return false;
+		}
+		let closestIndex = 0;
+		let distance = Math.hypot(this.controlPoints[closestIndex][0] - x, this.controlPoints[closestIndex][1] - y);
+		for(let i = 1; i < this.controlPoints.length; i++)
+		{
+			let trialDist = Math.hypot(this.controlPoints[i][0] - x, this.controlPoints[i][1] - y);
+			if(trialDist < distance)
+			{
+				closestIndex = i;
+				distance = trialDistance;
+			}
+		}
+		this.controlPoints.splice(closestIndex, 1);
+		return true;
+	}
+	cascade(percent)
+	{
+		return this.cascadeEngine(this.controlPoints, percent);
+	}
+	cascadeEngine(pointSet, percent)
+	{
+		if(pointSet.length == 1)
+		{
+			return pointSet;
+		}
+		if(pointSet.length == 2)
+		{
+			return [[weightMidpoint(pointSet[0], pointSet[1], percent)]];
+		}
+		let smallerSet = [];
+		for(let i = 0; i < pointSet.length - 1; i++)
+		{
+			smallerSet.push(weightMidpoint(pointSet[i], pointSet[i + 1], percent));
+		}
+		var output = this.cascade(smallerSet, percent);
+		output.push(smallerSet);
+		return output;
+	}
+}
+
+function start() {
+	//canvas = createCanvas(sideLength,sideLength);
+	//sideLength = canvas.
 	//frameRate(10000);
+	
 	subframe = 0;
 	resolution = 2000;
 	mode = 0;
-	count = floor(Math.random() * 3) + 2;
-	for(i = 0; i <= count; i++)
+	count = Math.floor(Math.random() * 3) + 2;
+	for(let i = 0; i <= count; i++)
 	{
 		controlPoints.push(generateControlPoints());
 		curves.push([]);
 		colorOffset.push(Math.random() * 5 + 0.5);
 	}
+	setInterval(draw, 1000 / framerate);
 	//controlPoints = curves[0];
 	/*
 	p1 = {x:100 * random(), y:100 * random(), assigned:0};
@@ -56,8 +134,13 @@ function setup() {
 	};
 	/*
 	*/
-	noFill();
+	//noFill();
   // put setup code here
+}
+
+function click()
+{
+
 }
 
 function generateControlPoints()
@@ -65,9 +148,9 @@ function generateControlPoints()
 	var length = Math.floor(Math.random() * 4) + 3;
 	var output = []; 
 	var divisions = sideLength / (length + 1);
-	for(i = 0; i < length; i++)
+	for(let i = 0; i < length; i++)
 	{
-		output.push({x:divisions * (i + 1) + divisions * random(), y:sideLength * random(), assigned:0});
+		output.push({x:divisions * (i + 1) + divisions * Math.random(), y:sideLength * Math.random(), assigned:0});
 	}
 	return output;
 }
@@ -89,7 +172,7 @@ function cascade(pointSet, percent)
 		return [[weightMidpoint(pointSet[0], pointSet[1], percent)]];
 	}
 	var smallerSet = [];
-	for(i = 0; i < pointSet.length - 1; i++)
+	for(let i = 0; i < pointSet.length - 1; i++)
 	{
 		smallerSet.push(weightMidpoint(pointSet[i], pointSet[i + 1], percent));
 	}
@@ -136,57 +219,73 @@ function distance(point1, point2)
 	return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y,2));
 }
 
-function drawPath(pointSet)
+function drawPath(pointSet, context)
 {
+	context = canvas.getContext("2d");
+	context.strokeStyle = nextColor();
 	//stroke(colors[colorIndex % colors.length]);
 	if(pointSet.length > 1)
 	{
-		for(i = 0; i < pointSet.length - 1; i++)
+		context.beginPath();
+		context.moveTo(pointSet[0].x,pointSet[0].y);
+		for(let i = 0; i < pointSet.length - 1; i++)
 		{
-			line(pointSet[i].x,pointSet[i].y,pointSet[i+1].x,pointSet[i+1].y);
+			context.lineTo(pointSet[i+1].x,pointSet[i+1].y);
 		}
+		context.stroke();
 	}
 }
 
 function nextColor()
 {
 	//stroke(colors[colorIndex % colors.length]);
-	stroke(floor(255 * Math.sin(colorIndex)), floor(255 * Math.sin(2 * colorIndex)), floor(255 * Math.sin(3 * colorIndex)));
+	//stroke(floor(255 * Math.sin(colorIndex)), floor(255 * Math.sin(2 * colorIndex)), floor(255 * Math.sin(3 * colorIndex)));
 	//colorIndex = (colorIndex + 1) % colors.length;
-	colorIndex = (colorIndex + 1);
+	//context.strokeStyle = colors[colorIndex % colors.length];
+	colorIndex = (colorIndex + 1) % colors.length;
+	return(colors[colorIndex % colors.length]);
 }
 
 function draw() {
-	clear();
-	background('black');
-	stroke(0, 0, 0);
+	//clear();
+	//background('black');
+	//stroke(0, 0, 0);
 	//fill('black');
 	
 	//stroke(colors[colorIndex % colors.length]);
 	//colorIndex = (colorIndex + 1) % colors.length;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	var framePoints = [];
-	for(i = 0; i < controlPoints.length; i++)
+	for(let i = 0; i < controlPoints.length; i++)
 	{
-		colorIndex = colorOffset[i];
-		nextColor();
+		colorIndex = 0;
+		ctx.strokeStyle = colors[colorIndex];
 		framePoints.push(cascade(controlPoints[i], subframe * 5 / resolution));
-		for(j = 0; j < controlPoints[i].length; j++)
+		
+		for(let j = 0; j < controlPoints[i].length; j++)
 		{
-			ellipse(controlPoints[i][j].x, controlPoints[i][j].y, 4, 4);
+			ctx.beginPath();
+			ctx.arc(controlPoints[i][j].x, controlPoints[i][j].y, 4, 0, Math.PI * 2);
+			ctx.stroke();
 			if(j < controlPoints[i].length - 1)
 			{
-				line(controlPoints[i][j].x,controlPoints[i][j].y,controlPoints[i][j+1].x,controlPoints[i][j+1].y)
+				ctx.beginPath()
+				ctx.moveTo(controlPoints[i][j].x,controlPoints[i][j].y)
+				ctx.lineTo(controlPoints[i][j+1].x,controlPoints[i][j+1].y)
+				//line(controlPoints[i][j].x,controlPoints[i][j].y,controlPoints[i][j+1].x,controlPoints[i][j+1].y)
+				ctx.stroke()
 			}
 		}
-		nextColor();
-		stroke(128);
-		strokeWeight(2);
-		noFill()
-		for(j = 0; j < framePoints[i].length; j++)
+		ctx.stroke();
+		ctx.fillColor = nextColor();
+		//stroke(128);
+		//strokeWeight(2);
+		//noFill()
+		for(let j = 0; j < framePoints[i].length; j++)
 		{
 			var pointSet = framePoints[i][j];
-			drawPath(pointSet);
-			nextColor();
+			drawPath(pointSet, ctx);
+			ctx.strokeStyle = nextColor();
 			//stroke(colors[colorIndex % colors.length]);
 			//colorIndex = (colorIndex + 1) % colors.length;
 		}
@@ -246,12 +345,13 @@ function draw() {
 		//ellipse(blueCurve[i].x,blueCurve[i].y, 1, 1);
 	}
 	*/
-	for(var i = 0; i < curves.length; i++)
+	ctx.fillColor = nextColor();
+	for(let i = 0; i < curves.length; i++)
 	{
 		point = framePoints[i][0][0];
 		curves[i].push(point);
-		stroke('white');
-		drawPath(curves[i]);
+		//stroke('white');
+		drawPath(curves[i], ctx);
 	}
 	
 
@@ -262,11 +362,11 @@ function draw() {
 		subframe = 0;
 		if(mode == 0)
 		{
-			var count = floor(Math.random() * 3) + 1;
+			let count = Math.floor(Math.random() * 3) + 1;
 			curves = [];
 			controlPoints = [];
 			colorOffset = [];
-			for(i = 0; i < count; i++)
+			for(let i = 0; i < count; i++)
 			{
 				controlPoints.push(generateControlPoints());
 				curves.push([]);

@@ -14,7 +14,7 @@ class BezierCurve {
 		this.controlPoints = [];
 		this.path = [];
 		this.nestedPoints = [];
-		this.generateControlPoints(Math.floor(Math.random() * 4) + 3);
+		this.generateControlPoints(Math.floor(Math.random() * 4) + 4);
 	}
 	generateControlPoints(n)
 	{
@@ -92,10 +92,10 @@ class BezierCurve {
 	{
 		let context = canvas.getContext("2d");
 		let colorIndex = 0;
-		context.strokeStyle = colorSet[colorIndex];
-		context.fillStyle = colorSet[colorIndex];
+		context.strokeStyle = "black";
+		context.fillStyle = "black";
 		drawPath(this.controlPoints, context);
-		colorIndex = (colorIndex + 1) % colorSet.length;
+		//colorIndex = (colorIndex + 1) % colorSet.length;
 
 		for(let i = 0; i < this.nestedPoints.length; i++)
 		{
@@ -104,8 +104,8 @@ class BezierCurve {
 			drawPath(this.nestedPoints[i], context);
 			colorIndex = (colorIndex + 1) % colorSet.length;
 		}
-		context.strokeStyle = "black";//colorSet[colorIndex];
-		context.fillStyle = "black";//colorSet[colorIndex];
+		context.strokeStyle = "black";
+		context.fillStyle = "black";
 		drawPath(this.path, context);
 		colorIndex = (colorIndex + 1) % colorSet.length;
 	}
@@ -115,7 +115,7 @@ var curves = [];
 var controlPoints = [];
 var count = 0;
 
-var colors = ["black","red","green","blue","purple"];
+var colors = ["red","green","blue","purple"];
 var colorIndex = 0;
 var mode;
 //var colorOffset = [];
@@ -320,7 +320,7 @@ function draw()
 			for(let i = 0; i < count; i++)
 			{
 				curves.push(new BezierCurve());
-				controlPoints.push(generateControlPoints());
+				//controlPoints.push(generateControlPoints());
 				//curves.push([]);
 				//colorOffset.push(Math.random() * 5 + 0.5);
 			}
